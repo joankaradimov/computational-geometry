@@ -4,10 +4,6 @@
 
 #include "../vecta/vecta.h"
 
-template<typename T> void print_with_type(T x) {
-	std::cout << typeid(x).name() << ": " << x << std::endl;
-}
-
 template <typename N>
 std::ostream& operator<< (std::ostream& out, const vecta::vec2d<N>& v) {
 	return out << '(' << v.x << ", " << v.y << ')';
@@ -24,10 +20,6 @@ int main()
 	auto length_ab = vecta::len(-a + b);
 	auto length_ab_side = abs((-l + r) * (-a + b)) / length_ab;
 	auto length_ab_normal_side = abs((-a + b) ^ (-a + q)) / length_ab;
-
-	/*print_with_type(length_ab);
-	print_with_type(length_ab_side);
-	print_with_type(length_ab_normal_side);*/
 
 	//std::stringstream sp_input;
 	//sp_intput << "echo -e sp svg " <<
