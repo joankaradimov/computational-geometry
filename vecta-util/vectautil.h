@@ -25,22 +25,22 @@ template<typename T> bool have_same_sign(const T& a, const T& b) {
 }
 
 template <typename N>
-std::ostream& operator<< (std::ostream& out, const vecta::vec2d<N>& v) {
+std::ostream& operator<< (std::ostream& out, const vec2d<N>& v) {
 	return out << '(' << v.x << ", " << v.y << ')';
 }
 
-template <typename N = vecta::Number>
-class polygon : public std::vector<vecta::vec2d<N>> {
+template <typename N = Number>
+class polygon : public std::vector<vec2d<N>> {
 public:
-	polygon(std::initializer_list<vecta::vec2d<N>> points) : std::vector<vecta::vec2d<N>>(points) {
+	polygon(std::initializer_list<vec2d<N>> points) : std::vector<vec2d<N>>(points) {
 	}
 
-	const vecta::vec2d<N>& operator[] (int index) const {
-		return this->std::vector<vecta::vec2d<N>>::operator[](index_modulo_size(index));
+	const vec2d<N>& operator[] (int index) const {
+		return this->std::vector<vec2d<N>>::operator[](index_modulo_size(index));
 	}
 
-	vecta::vec2d<N>& operator[] (int index) {
-		return this->std::vector<vecta::vec2d<N>>::operator[](index_modulo_size(index));
+	vec2d<N>& operator[] (int index) {
+		return this->std::vector<vec2d<N>>::operator[](index_modulo_size(index));
 	}
 
 	bool is_ear(size_t point_index) const {
