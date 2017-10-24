@@ -1,4 +1,5 @@
 ﻿#include <assert.h>
+#include <initializer_list>
 #include <iostream>
 #include <math.h>
 #include <vector>
@@ -16,34 +17,70 @@ std::ostream& operator<< (std::ostream& out, const vecta::vec2d<N>& v) {
 	return out << '(' << v.x << ", " << v.y << ')';
 }
 
-// S <sub>P1 ... Pn</sub> 
-
-// Compute the area of polygon:
-// Sum the directed areas of triangles formed by each pair of consequent points
-// and one random point in the plain (we select the point (0, 0))
-template<typename T> T directed_area(const std::vector<vecta::vec2d<T>>& polygon_points)
-{
-	int polygon_point_count = polygon_points.size();
-	T result = 0;
-
-	for (int i = 0; i < polygon_point_count; ++i) {
-		auto& vector1 = polygon_points[i];
-		auto& vector2 = polygon_points[(i + 1) % polygon_point_count];
-
-		result += vector1 ^ vector2;
+template <typename N = vecta::Number>
+class polygon : public std::vector<vecta::vec2d<N>> {
+public:
+	polygon(std::initializer_list<vecta::vec2d<N>> points) : std::vector<vecta::vec2d<N>>(points) {
 	}
 
-	return result / 2;
-}
+	const vecta::vec2d<N>& operator[] (int index) const {
+		return this->std::vector<vecta::vec2d<N>>::operator[](index_modulo_size(index));
+	}
+
+	vecta::vec2d<N>& operator[] (int index) {
+		return this->std::vector<vecta::vec2d<N>>::operator[](index_modulo_size(index));
+	}
+
+	bool is_ear(size_t point_index) const {
+		auto& previous_point = (*this)[point_index - 1];
+		auto& point = (*this)[point_index];
+		auto& next_point = (*this)[point_index + 1];
+
+		return is_ear(previous_point, point, next_point);
+	}
+
+	// S <sub>P1 ... Pn</sub>
+
+	// Compute the area of polygon:
+	// Sum the directed areas of triangles formed by each pair of consequent points
+	// and one random point in the plain (we select the point (0, 0))
+	N directed_area() const {
+		N result = 0;
+
+		for (int i = 0; i < size(); ++i) {
+			auto& vector1 = (*this)[i];
+			auto& vector2 = (*this)[i + 1];
+
+			result += vector1 ^ vector2;
+		}
+
+		return result / 2;
+	}
+private:
+	int index_modulo_size(int index) const {
+		// TODO: use a faster method for calculation
+		int n = size();
+		return (index % n + n) % n;
+	}
+
+	bool is_ear(const vecta::vec2d<N>& previous_point, const vecta::vec2d<N>& point, const vecta::vec2d<N>& next_point) const {
+		sign polygon_sign = get_sign(directed_area());
+
+		sign point_sign = get_sign((point - previous_point) ^ (next_point - point));
+		assert(point_sign != sign::zero);
+
+		return polygon_sign == point_sign;
+	}
+};
 
 void test1() {
-	std::vector<vecta::vec2d<>> polygon_points = {
+	polygon<> polygon = {
 		vecta::vec2d<>(0, 0),
 		vecta::vec2d<>(0, 0.1),
 		vecta::vec2d<>(0.1, 0.1),
 		vecta::vec2d<>(0.1, 0),
 	};
-	vecta::Number total_area = abs(directed_area(polygon_points));
+	vecta::Number total_area = abs(polygon.directed_area());
 
 	std::cout << total_area << std::endl;
 }
@@ -59,15 +96,15 @@ template<typename T> bool have_same_sign(const T& a, const T& b) {
 }
 
 template<typename T> bool is_inside_triangle(vecta::vec2d<T> a, vecta::vec2d<T> b, vecta::vec2d<T> c, vecta::vec2d<T> p) {
-	std::vector<vecta::vec2d<>> pab = { p, a, b };
-	double directed_area_pac = directed_area(pab);
+	polygon<> pab = { p, a, b };
+	double directed_area_pac = pab.directed_area();
 
 	if (directed_area_pac == 0) {
 		return true;
 	}
 
-	std::vector<vecta::vec2d<>> pbc = { p, b, c };
-	double directed_area_pbc = directed_area(pbc);
+	polygon<> pbc = { p, b, c };
+	double directed_area_pbc = pbc.directed_area();
 	if (directed_area_pac == 0) {
 		return true;
 	}
@@ -75,8 +112,8 @@ template<typename T> bool is_inside_triangle(vecta::vec2d<T> a, vecta::vec2d<T> 
 		return false;
 	}
 
-	std::vector<vecta::vec2d<>> pca = { p, c, a };
-	double directed_area_pca = directed_area(pca);
+	polygon<> pca = { p, c, a };
+	double directed_area_pca = pca.directed_area();
 	if (directed_area_pca == 0) {
 		return true;
 	}
@@ -85,24 +122,6 @@ template<typename T> bool is_inside_triangle(vecta::vec2d<T> a, vecta::vec2d<T> 
 	}
 
 	return true;
-}
-
-template<typename T> bool is_ear(const std::vector<vecta::vec2d<T>>& polygon, size_t point_index) {
-	int polygon_size = polygon.size();
-
-	auto& previous_point = polygon[(point_index + polygon_size - 1) % polygon_size];
-	auto& point = polygon[point_index];
-	auto& next_point = polygon[(point_index + 1) % polygon_size];
-
-	return is_ear(get_sign(directed_area(polygon)), previous_point, point, next_point);
-}
-
-template<typename T> bool is_ear(sign polygon_sign, const vecta::vec2d<T>& previous_point, const vecta::vec2d<T>& point, const vecta::vec2d<T>& next_point) {
-	sign point_sign = get_sign((point - previous_point) ^ (next_point - point));
-
-	assert(point_sign != sign::zero);
-
-	return polygon_sign == point_sign;
 }
 
 void test2() {
@@ -114,18 +133,18 @@ void test2() {
 	std::cout << is_inside_triangle(a, b, c, p) << std::endl;
 }
 
-template<typename T> size_t get_next_triangle_point(const std::vector<vecta::vec2d<T>>& polygon_points) {
-	for (size_t potential_ear_index = 0; potential_ear_index < polygon_points.size(); ++potential_ear_index) {
-		if (!is_ear(polygon_points, potential_ear_index)) {
+template<typename T> size_t get_next_triangle_point(const polygon<T>& polygon) {
+	for (size_t potential_ear_index = 0; potential_ear_index < polygon.size(); ++potential_ear_index) {
+		if (!polygon.is_ear(potential_ear_index)) {
 			continue;
 		}
 
-		auto& ear_previous_point = polygon_points[(potential_ear_index + polygon_points.size() - 1) % polygon_points.size()];
-		auto& ear_point = polygon_points[potential_ear_index];
-		auto& ear_next_point = polygon_points[(potential_ear_index + 1) % polygon_points.size()];
+		auto& ear_previous_point = polygon[potential_ear_index- 1];
+		auto& ear_point = polygon[potential_ear_index];
+		auto& ear_next_point = polygon[potential_ear_index + 1];
 
-		for (size_t point_index = 0; point_index < polygon_points.size(); ++point_index) {
-			if (is_inside_triangle(ear_previous_point, ear_point, ear_next_point, polygon_points[point_index])) {
+		for (size_t point_index = 0; point_index < polygon.size(); ++point_index) {
+			if (is_inside_triangle(ear_previous_point, ear_point, ear_next_point, polygon[point_index])) {
 				continue;
 			}
 
@@ -137,7 +156,7 @@ template<typename T> size_t get_next_triangle_point(const std::vector<vecta::vec
 
 // Triangulation by ear clipping
 int main() {
-	std::vector<vecta::vec2d<>> polygon_points = {
+	polygon<> polygon_points = {
 		vecta::vec2d<>(0, 0),
 		vecta::vec2d<>(0, 4),
 		vecta::vec2d<>(2, 2),
