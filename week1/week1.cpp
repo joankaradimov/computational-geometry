@@ -4,11 +4,6 @@
 
 #include "../vecta/vecta.h"
 
-template <typename N>
-std::ostream& operator<< (std::ostream& out, const vecta::vec2d<N>& v) {
-	return out << '(' << v.x << ", " << v.y << ')';
-}
-
 int main()
 {
 	vecta::vec2d<> a(2, 0);
