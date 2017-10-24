@@ -44,11 +44,12 @@ public:
 	}
 
 	bool is_ear(size_t point_index) const {
-		auto& previous_point = (*this)[point_index - 1];
-		auto& point = (*this)[point_index];
-		auto& next_point = (*this)[point_index + 1];
+		sign polygon_sign = get_sign(directed_area());
+		sign point_sign = get_point_sign(point_index);
 
-		return is_ear(previous_point, point, next_point);
+		assert(point_sign != sign::zero);
+
+		return polygon_sign == point_sign;
 	}
 
 	// S <sub>P1 ... Pn</sub>
@@ -75,13 +76,12 @@ private:
 		return (index % n + n) % n;
 	}
 
-	bool is_ear(const vecta::vec2d<N>& previous_point, const vecta::vec2d<N>& point, const vecta::vec2d<N>& next_point) const {
-		sign polygon_sign = get_sign(directed_area());
+	sign get_point_sign(int point_index) const {
+		auto& previous_point = (*this)[point_index - 1];
+		auto& point = (*this)[point_index];
+		auto& next_point = (*this)[point_index + 1];
 
-		sign point_sign = get_sign((point - previous_point) ^ (next_point - point));
-		assert(point_sign != sign::zero);
-
-		return polygon_sign == point_sign;
+		return get_sign((point - previous_point) ^ (next_point - point));
 	}
 };
 
