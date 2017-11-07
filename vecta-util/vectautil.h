@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <assert.h>
 #include <initializer_list>
 #include <iostream>
@@ -68,6 +69,22 @@ public:
 		}
 
 		return result / 2;
+	}
+
+	vec2d<N> leftmost_point() const {
+		return *std::min_element(begin(), end(), [=](auto& a, auto& b) { return a.x < b.x; });
+	}
+
+	vec2d<N> rightmost_point() const {
+		return *std::min_element(begin(), end(), [=](auto& a, auto& b) { return a.x > b.x; });
+	}
+
+	vec2d<N> bottommost_point() const {
+		return *std::min_element(begin(), end(), [=](auto& a, auto& b) { return a.y < b.y; });
+	}
+
+	vec2d<N> topmost_point() const {
+		return *std::min_element(begin(), end(), [=](auto& a, auto& b) { return a.y > b.y; });
 	}
 private:
 	int index_modulo_size(int index) const {
