@@ -22,6 +22,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vecta-util", "vecta-util\ve
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "week4", "week4\week4.vcxproj", "{A182E4F2-B0AC-4537-9E5D-EBAC76B8BB42}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "week5", "week5\week5.vcxproj", "{7425ACBE-B9AF-4183-BD72-A19830823C7D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -86,6 +88,14 @@ Global
 		{A182E4F2-B0AC-4537-9E5D-EBAC76B8BB42}.Release|x64.Build.0 = Release|x64
 		{A182E4F2-B0AC-4537-9E5D-EBAC76B8BB42}.Release|x86.ActiveCfg = Release|Win32
 		{A182E4F2-B0AC-4537-9E5D-EBAC76B8BB42}.Release|x86.Build.0 = Release|Win32
+		{7425ACBE-B9AF-4183-BD72-A19830823C7D}.Debug|x64.ActiveCfg = Debug|x64
+		{7425ACBE-B9AF-4183-BD72-A19830823C7D}.Debug|x64.Build.0 = Debug|x64
+		{7425ACBE-B9AF-4183-BD72-A19830823C7D}.Debug|x86.ActiveCfg = Debug|Win32
+		{7425ACBE-B9AF-4183-BD72-A19830823C7D}.Debug|x86.Build.0 = Debug|Win32
+		{7425ACBE-B9AF-4183-BD72-A19830823C7D}.Release|x64.ActiveCfg = Release|x64
+		{7425ACBE-B9AF-4183-BD72-A19830823C7D}.Release|x64.Build.0 = Release|x64
+		{7425ACBE-B9AF-4183-BD72-A19830823C7D}.Release|x86.ActiveCfg = Release|Win32
+		{7425ACBE-B9AF-4183-BD72-A19830823C7D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
