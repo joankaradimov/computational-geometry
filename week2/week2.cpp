@@ -4,9 +4,9 @@
 void test1() {
 	vecta::polygon<> polygon = {
 		vecta::vec2d<>(0, 0),
-		vecta::vec2d<>(0, 0.1),
-		vecta::vec2d<>(0.1, 0.1),
-		vecta::vec2d<>(0.1, 0),
+		vecta::vec2d<>(0, 1),
+		vecta::vec2d<>(1, 1),
+		vecta::vec2d<>(1, 0),
 	};
 	vecta::Number total_area = abs(polygon.directed_area());
 
@@ -80,6 +80,8 @@ int main() {
 		vecta::vec2d<>(2, 2),
 		vecta::vec2d<>(20, 0),
 	};
+
+	std::cout << ">>>>" << polygon_points.topmost_point() << std::endl;
 
 	// TODO: this implementation is incorrect
 	// The algorithm is quadratic (not cubic)
