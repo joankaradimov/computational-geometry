@@ -22,7 +22,7 @@ std::vector<vecta::vec2d<N>> sorted_points(RandomIterator first, RandomIterator 
 }
 
 template <typename RandomIterator>
-auto convex_hull(RandomIterator first, RandomIterator last) {
+auto graham_scan_convex_hull(RandomIterator first, RandomIterator last) {
 	auto inital_point = get_initial_point(first, last);
 	auto points = sorted_points(first, last, inital_point);
 
@@ -120,7 +120,7 @@ void test_sort_points() {
 	assert(points[5] == vecta::vec2d<>(-3, 1));
 }
 
-void test_convex_hull() {
+void test_graham_scan_convex_hull() {
 	std::vector<vecta::vec2d<>> points;
 
 	// convex hull for a list of points with duplication
@@ -134,7 +134,7 @@ void test_convex_hull() {
 		vecta::vec2d<>(1, 0),
 		vecta::vec2d<>(1, 1),
 	};
-	std::vector<vecta::vec2d<>> hull1 = convex_hull(points.begin(), points.end());
+	std::vector<vecta::vec2d<>> hull1 = graham_scan_convex_hull(points.begin(), points.end());
 	assert(hull1[0] == vecta::vec2d<>(0, 0));
 	assert(hull1[1] == vecta::vec2d<>(1, 0));
 	assert(hull1[2] == vecta::vec2d<>(1, 1));
@@ -147,7 +147,7 @@ void test_convex_hull() {
 		vecta::vec2d<>(5, 5),
 		vecta::vec2d<>(10, 0),
 	};
-	std::vector<vecta::vec2d<>> hull2 = convex_hull(points.begin(), points.end());
+	std::vector<vecta::vec2d<>> hull2 = graham_scan_convex_hull(points.begin(), points.end());
 	assert(hull2[0] == vecta::vec2d<>(0, 0));
 	assert(hull2[1] == vecta::vec2d<>(10, 0));
 	assert(hull2[2] == vecta::vec2d<>(0, 10));
@@ -160,7 +160,7 @@ void test_convex_hull() {
 		vecta::vec2d<>(3, 5),
 		vecta::vec2d<>(-1, 0),
 	};
-	std::vector<vecta::vec2d<>> hull3 = convex_hull(points.begin(), points.end());
+	std::vector<vecta::vec2d<>> hull3 = graham_scan_convex_hull(points.begin(), points.end());
 	assert(hull3[0] == vecta::vec2d<>(-1, 0));
 	assert(hull3[1] == vecta::vec2d<>(10, 0));
 	assert(hull3[2] == vecta::vec2d<>(3, 5));
@@ -176,7 +176,7 @@ void test_convex_hull() {
 		vecta::vec2d<>(3, 3),
 		vecta::vec2d<>(5, 5),
 	};
-	std::vector<vecta::vec2d<>> hull5 = convex_hull(points.begin(), points.end());
+	std::vector<vecta::vec2d<>> hull5 = graham_scan_convex_hull(points.begin(), points.end());
 	assert(hull5[0] == vecta::vec2d<>(5, 0));
 	assert(hull5[1] == vecta::vec2d<>(10, 5));
 	assert(hull5[2] == vecta::vec2d<>(5, 10));
@@ -190,7 +190,7 @@ int main()
 {
 	test_initial_point();
 	test_sort_points();
-	test_convex_hull();
+	test_graham_scan_convex_hull();
 
 	return 0;
 }
