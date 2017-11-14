@@ -192,5 +192,5 @@ int main()
 	test_sort_points();
 	test_convex_hull();
 
-    return 0;
+	return 0;
 }
