@@ -49,6 +49,26 @@ auto graham_scan_convex_hull(RandomIterator first, RandomIterator last) {
 	return convex_hull;
 }
 
+template <typename ForwardIterator, typename N>
+vecta::vec2d<N> next_hull_point(ForwardIterator first, ForwardIterator last, vecta::vec2d<N> initial_point) {
+	return *std::max_element(first, last, [=](auto& a, auto& b) {
+		vecta::vec2d<N> a_vector = a - initial_point;
+		vecta::vec2d<N> b_vector = b - initial_point;
+		return (a_vector || b_vector) ? vecta::len(a_vector) < vecta::len(b_vector) : a_vector > b_vector;
+	});
+}
+
+template <typename ForwardIterator> auto jarvis_march_convex_hull(ForwardIterator first, ForwardIterator last) {
+	auto initial = get_initial_point(first, last);
+	std::vector<decltype(initial)> convex_hull = { initial };
+
+	for (auto current = next_hull_point(first, last, initial); current != initial; current = next_hull_point(first, last, current)) {
+		convex_hull.push_back(current);
+	}
+
+	return convex_hull;
+}
+
 void test_initial_point() {
 	std::vector<vecta::vec2d<>> points;
 	vecta::vec2d<> initial_point;
@@ -184,13 +204,21 @@ void test_graham_scan_convex_hull() {
 	assert(hull5[4] == vecta::vec2d<>(2, 2));
 }
 
-// TODO: implement Jarvis March
+void test_next_hull_point() {
+	// TODO: implement tests
+}
+
+void test_jarvis_march_convex_hull() {
+	// TODO: implement tests
+}
 
 int main()
 {
 	test_initial_point();
 	test_sort_points();
 	test_graham_scan_convex_hull();
+	test_next_hull_point();
+	test_jarvis_march_convex_hull();
 
 	return 0;
 }
